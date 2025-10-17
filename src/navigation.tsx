@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { LoginScreen } from './screens/login-screen';
 import { ZoomLoginScreen } from './screens/zoom-login-screen';
 import { JoinScreen } from './screens/join-screen';
@@ -28,7 +28,7 @@ export function Navigation() {
 
   return (
     <Stack.Navigator 
-      initialRouteName={user ? "JoinMeeting" : "Login"}
+      initialRouteName={user ? "Cursos" : "Login"}
       screenOptions={{
         headerShown: false // Hide header for all screens by default
       }}
@@ -48,24 +48,51 @@ export function Navigation() {
         }}
       />
       <Stack.Screen 
-        name="JoinMeeting" 
-        component={JoinScreen}
-        options={{ 
-          headerShown: true,
-          title: 'Join Meeting',
-          // Prevent going back to Login
-          gestureEnabled: false
-        }}
-      />
-      <Stack.Screen 
         name="Cursos" 
         component={CursosScreen}
-        options={{ 
+        options={({ navigation }) => ({ 
           headerShown: true,
           title: 'Mis Cursos',
           // Prevent going back to Login
-          gestureEnabled: false
-        }}
+          gestureEnabled: false,
+          headerRight: () => (
+            <Text 
+              onPress={() => navigation.navigate('JoinMeeting')}
+              style={{
+                color: '#007AFF',
+                marginRight: 16,
+                fontSize: 16,
+                fontWeight: '500'
+              }}
+            >
+              Zoom
+            </Text>
+          )
+        })}
+      />
+
+      <Stack.Screen 
+        name="JoinMeeting" 
+        component={JoinScreen}
+        options={({ navigation }) => ({ 
+          headerShown: true,
+          title: 'Join Meeting',
+          // Allow going back to Cursos
+          gestureEnabled: true,
+          headerLeft: () => (
+            <Text 
+              onPress={() => navigation.goBack()}
+              style={{
+                color: '#007AFF',
+                marginLeft: 16,
+                fontSize: 16,
+                fontWeight: '500'
+              }}
+            >
+              Cursos
+            </Text>
+          )
+        })}
       />
     </Stack.Navigator>
   );

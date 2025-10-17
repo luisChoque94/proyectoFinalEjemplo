@@ -11,6 +11,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginMoodle, getUserInfo } from '../../services/moodle-cursos';
 
 type LoginScreenProps = {
@@ -44,9 +45,13 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
       if (tokenResponse.token) {
         // Get user info using the token
         const userInfo = await getUserInfo(tokenResponse.token);
-        console.log('� User info:', userInfo);
+        console.log('👤 User info:', userInfo);
         
-        // Call the context login to save the token
+        // Guardar los datos en AsyncStorage para acceso global
+        await AsyncStorage.setItem('@moodle_token', tokenResponse.token);
+        await AsyncStorage.setItem('@moodle_userid', userInfo.userid.toString());
+        
+        // Call the context login to save the credentials
         await login(username.trim(), password);
         
         console.log('✅ Login successful! Navigating to ZoomLogin...');

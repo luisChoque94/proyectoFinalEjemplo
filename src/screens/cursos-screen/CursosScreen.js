@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
 import { FlatList, Linking, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { getCourseContents, getUserCourses } from "../../services/moodle-cursos.js";
+import { useAuth } from "../../context";
 
 export default function CursosScreen({ route }) {
-  console.log("🎯 CursosScreen - Iniciando con params:", route.params);
-  const { token, userid } = route.params;
+  const { user } = useAuth();
+  console.log("🎯 CursosScreen - Iniciando con params:", route?.params);
+  
+  // Intentar obtener token/userid de los parámetros, si no del contexto
+  const token = route?.params?.token || user?.token;
+  const userid = route?.params?.userid || user?.userid;
+  
+  console.log("🔑 Usando token:", token);
+  console.log("👤 Usando userid:", userid);
+
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
